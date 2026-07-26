@@ -1,0 +1,61 @@
+{
+	"Name": "Claude Session Monitor",
+	"Version": "0.1.0.0",
+	"Author": "Owen Zanzal",
+	"Actions": [
+		{
+			"Name": "Session Status",
+			"UUID": "com.owenzanzal.claude-session-monitor.session-status",
+			"Icon": "imgs/actions/session-status/icon",
+			"Tooltip": "Shows a live count of running Claude Code sessions by status.",
+			"Controllers": [
+				"Keypad"
+			],
+			"States": [
+				{
+					"Image": "imgs/actions/session-status/key",
+					"TitleAlignment": "middle"
+				}
+			]
+		},
+		{
+			"Name": "Agent Session",
+			"UUID": "com.owenzanzal.claude-session-monitor.agent-session",
+			"Icon": "imgs/actions/session-status/icon",
+			"Tooltip": "Launches a Claude Code session, shows its live status, and focuses its window on a second press.",
+			"Controllers": [
+				"Keypad"
+			],
+			"States": [
+				{
+					"Image": "imgs/actions/session-status/key",
+					"TitleAlignment": "middle"
+				}
+			]
+		}
+	],
+	"Category": "Claude Session Monitor",
+	"CategoryIcon": "imgs/plugin/category-icon",
+	"CodePath": "bin/plugin.js",
+	"Description": "Monitor Claude Code session status",
+	"Icon": "imgs/plugin/marketplace",
+	"SDKVersion": 3,
+	"Software": {
+		"MinimumVersion": "7.1"
+	},
+	"OS": [
+		{
+			"Platform": "mac",
+			"MinimumVersion": "12"
+		},
+		{
+			"Platform": "windows",
+			"MinimumVersion": "10"
+		}
+	],
+	"Nodejs": {
+		"Version": "24",
+		"Debug": "enabled"
+	},
+	"UUID": "com.owenzanzal.claude-session-monitor"
+}
