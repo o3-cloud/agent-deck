@@ -1,6 +1,7 @@
 import { action, SingletonAction, WillAppearEvent, WillDisappearEvent } from "@elgato/streamdeck";
 
 import { listSessions, Session, SessionStatus } from "../session-reader";
+import { iconForStatus } from "../status-icon";
 
 const POLL_INTERVAL_MS = 2000;
 
@@ -20,10 +21,16 @@ function formatTitle(sessions: Session[]): string {
 		.join("\n");
 }
 
+// The single most attention-worthy status across all sessions; drives the icon color.
+function dominantStatus(sessions: Session[]): SessionStatus | undefined {
+	const present = new Set(sessions.map((s) => s.status));
+	return STATUS_ORDER.find((status) => present.has(status));
+}
+
 /**
  * Displays a live count of running Claude Code sessions, grouped by status.
  */
-@action({ UUID: "com.owenzanzal.claude-session-monitor.session-status" })
+@action({ UUID: "com.owenzanzal.agent-deck.session-status" })
 export class SessionStatusAction extends SingletonAction {
 	private readonly timers = new Map<string, ReturnType<typeof setInterval>>();
 
@@ -31,6 +38,9 @@ export class SessionStatusAction extends SingletonAction {
 		const update = async () => {
 			const sessions = await listSessions();
 			await ev.action.setTitle(formatTitle(sessions));
+
+			const status = dominantStatus(sessions);
+			await ev.action.setImage(status ? iconForStatus(status) : undefined);
 		};
 
 		await update();

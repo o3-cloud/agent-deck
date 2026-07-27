@@ -2,7 +2,7 @@ import { appendFileSync } from "node:fs";
 import { homedir } from "node:os";
 import path from "node:path";
 
-const DEBUG_LOG_PATH = "/tmp/csm-debug.log";
+const DEBUG_LOG_PATH = "/tmp/agent-deck-debug.log";
 function debugLog(message: string): void {
 	try {
 		appendFileSync(DEBUG_LOG_PATH, `${new Date().toISOString()} ${message}\n`);
@@ -16,6 +16,7 @@ import { action, KeyDownEvent, SingletonAction, WillAppearEvent, WillDisappearEv
 import { launchAgentSession } from "../launcher";
 import { focusGhosttyWindow } from "../ghostty-focus";
 import { listSessions } from "../session-reader";
+import { iconForStatus, STARTING_ICON } from "../status-icon";
 
 const POLL_INTERVAL_MS = 2000;
 // A freshly-launched `claude` process (open -> Ghostty -> login shell -> claude
@@ -36,7 +37,7 @@ type AgentSessionSettings = {
  * session's live status once bound, and refocuses its Ghostty window on a
  * second press.
  */
-@action({ UUID: "com.owenzanzal.claude-session-monitor.agent-session" })
+@action({ UUID: "com.owenzanzal.agent-deck.agent-session" })
 export class AgentSessionAction extends SingletonAction<AgentSessionSettings> {
 	private readonly timers = new Map<string, ReturnType<typeof setInterval>>();
 
@@ -49,6 +50,7 @@ export class AgentSessionAction extends SingletonAction<AgentSessionSettings> {
 				if (!settings.sessionId) {
 					debugLog(`[${ev.action.id}] render: unbound, showing Launch`);
 					await ev.action.setTitle("Launch");
+					await ev.action.setImage(undefined);
 					return;
 				}
 
@@ -67,10 +69,12 @@ export class AgentSessionAction extends SingletonAction<AgentSessionSettings> {
 					debugLog(`[${ev.action.id}] render: not found and past grace period (${age}ms), clearing`);
 					await ev.action.setSettings({});
 					await ev.action.setTitle("Launch");
+					await ev.action.setImage(undefined);
 					return;
 				}
 
 				await ev.action.setTitle(`${settings.name}\n${bound.status}`);
+				await ev.action.setImage(iconForStatus(bound.status));
 			} catch (error) {
 				debugLog(`[${ev.action.id}] render FAILED: ${error instanceof Error ? error.stack : error}`);
 			}
@@ -96,6 +100,7 @@ export class AgentSessionAction extends SingletonAction<AgentSessionSettings> {
 
 		if (!settings.sessionId) {
 			await ev.action.setTitle("starting…");
+			await ev.action.setImage(STARTING_ICON);
 			try {
 				const { sessionId, name } = await launchAgentSession(DEFAULT_CWD);
 				debugLog(`[${ev.action.id}] launched ${name} (${sessionId})`);
@@ -104,6 +109,7 @@ export class AgentSessionAction extends SingletonAction<AgentSessionSettings> {
 			} catch (error) {
 				debugLog(`[${ev.action.id}] launch FAILED: ${error}`);
 				await ev.action.setTitle("Launch");
+				await ev.action.setImage(undefined);
 				await ev.action.showAlert();
 			}
 			return;

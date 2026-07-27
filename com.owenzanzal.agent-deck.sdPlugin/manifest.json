@@ -1,11 +1,11 @@
 {
-	"Name": "Claude Session Monitor",
+	"Name": "Agent Deck",
 	"Version": "0.1.0.0",
 	"Author": "Owen Zanzal",
 	"Actions": [
 		{
 			"Name": "Session Status",
-			"UUID": "com.owenzanzal.claude-session-monitor.session-status",
+			"UUID": "com.owenzanzal.agent-deck.session-status",
 			"Icon": "imgs/actions/session-status/icon",
 			"Tooltip": "Shows a live count of running Claude Code sessions by status.",
 			"Controllers": [
@@ -20,7 +20,7 @@
 		},
 		{
 			"Name": "Agent Session",
-			"UUID": "com.owenzanzal.claude-session-monitor.agent-session",
+			"UUID": "com.owenzanzal.agent-deck.agent-session",
 			"Icon": "imgs/actions/session-status/icon",
 			"Tooltip": "Launches a Claude Code session, shows its live status, and focuses its window on a second press.",
 			"Controllers": [
@@ -32,9 +32,24 @@
 					"TitleAlignment": "middle"
 				}
 			]
+		},
+		{
+			"Name": "Attention Queue",
+			"UUID": "com.owenzanzal.agent-deck.attention-queue",
+			"Icon": "imgs/actions/session-status/icon",
+			"Tooltip": "Focuses the oldest session that's idle or waiting for input, FIFO.",
+			"Controllers": [
+				"Keypad"
+			],
+			"States": [
+				{
+					"Image": "imgs/actions/session-status/key",
+					"TitleAlignment": "middle"
+				}
+			]
 		}
 	],
-	"Category": "Claude Session Monitor",
+	"Category": "Agent Deck",
 	"CategoryIcon": "imgs/plugin/category-icon",
 	"CodePath": "bin/plugin.js",
 	"Description": "Monitor Claude Code session status",
@@ -57,5 +72,5 @@
 		"Version": "24",
 		"Debug": "enabled"
 	},
-	"UUID": "com.owenzanzal.claude-session-monitor"
+	"UUID": "com.owenzanzal.agent-deck"
 }

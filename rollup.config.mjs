@@ -6,7 +6,7 @@ import path from "node:path";
 import url from "node:url";
 
 const isWatching = !!process.env.ROLLUP_WATCH;
-const sdPlugin = "com.owenzanzal.claude-session-monitor.sdPlugin";
+const sdPlugin = "com.owenzanzal.agent-deck.sdPlugin";
 
 /**
  * @type {import('rollup').RollupOptions}
